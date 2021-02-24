@@ -1,0 +1,35 @@
+{
+  "garbageApp": {
+    "order": {
+      "home": {
+        "title": "Orders",
+        "createLabel": "Создать новый Order",
+        "createOrEditLabel": "Создать или отредактировать Order",
+        "notFound": "No Orders found"
+      },
+      "created": "Новый Order создан с идентификатором {{ param }}",
+      "updated": "Order обновлен с идентификатором {{ param }}",
+      "deleted": "Order удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Order {{ id }}?"
+      },
+      "detail": {
+        "title": "Order"
+      },
+      "orderDate": "Order Date",
+      "price": "Price",
+      "finishDate": "Finish Date",
+      "userPhotoUrl": "User Photo Url",
+      "courierPhotoUrl": "Courier Photo Url",
+      "endOrderPhotoUrl": "End Order Photo Url",
+      "orderStartDate": "Order Start Date",
+      "orderFinishDate": "Order Finish Date",
+      "orderStatus": "Order Status",
+      "courierRatio": "Courier Ratio",
+      "userRatio": "User Ratio",
+      "garbage": "Garbage",
+      "user": "User",
+      "courier": "Courier"
+    }
+  }
+}

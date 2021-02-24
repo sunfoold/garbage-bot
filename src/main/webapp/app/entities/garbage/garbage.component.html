@@ -1,0 +1,63 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="garbageApp.garbage.home.title">Garbage</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-garbage" [routerLink]="['/garbage/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="garbageApp.garbage.home.createLabel">
+            Create a new Garbage
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="garbage?.length === 0">
+        <span jhiTranslate="garbageApp.garbage.home.notFound">No garbage found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="garbage && garbage.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.garbage.pockets">Pockets</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.garbage.hugeThings">Huge Things</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let garbage of garbage ;trackBy: trackId">
+                    <td><a [routerLink]="['/garbage', garbage.id, 'view']">{{ garbage.id }}</a></td>
+                    <td>{{ garbage.pockets }}</td>
+                    <td>{{ garbage.hugeThings }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/garbage', garbage.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/garbage', garbage.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(garbage)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

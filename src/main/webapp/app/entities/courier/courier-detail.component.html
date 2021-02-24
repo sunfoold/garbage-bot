@@ -1,0 +1,56 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="courier">
+            <h2><span jhiTranslate="garbageApp.courier.detail.title">Courier</span> {{ courier.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="garbageApp.courier.name">Name</span></dt>
+                <dd>
+                    <span>{{ courier.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.courier.phoneNumber">Phone Number</span></dt>
+                <dd>
+                    <span>{{ courier.phoneNumber }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.courier.photoUrl">Photo Url</span></dt>
+                <dd>
+                    <span>{{ courier.photoUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.courier.telegramChatId">Telegram Chat Id</span></dt>
+                <dd>
+                    <span>{{ courier.telegramChatId }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.courier.joinDate">Join Date</span></dt>
+                <dd>
+                    <span>{{ courier.joinDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.courier.balance">Balance</span></dt>
+                <dd>
+                    <span>{{ courier.balance }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.courier.company">Company</span></dt>
+                <dd>
+                    <div *ngIf="courier.company">
+                        <a [routerLink]="['/courier-company', courier.company?.id, 'view']">{{ courier.company?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/courier', courier.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

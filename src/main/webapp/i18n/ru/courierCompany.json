@@ -1,0 +1,27 @@
+{
+  "garbageApp": {
+    "courierCompany": {
+      "home": {
+        "title": "Courier Companies",
+        "createLabel": "Создать новый Courier Company",
+        "createOrEditLabel": "Создать или отредактировать Courier Company",
+        "notFound": "No Courier Companies found"
+      },
+      "created": "Новый Courier Company создан с идентификатором {{ param }}",
+      "updated": "Courier Company обновлен с идентификатором {{ param }}",
+      "deleted": "Courier Company удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Courier Company {{ id }}?"
+      },
+      "detail": {
+        "title": "Courier Company"
+      },
+      "name": "Name",
+      "inn": "Inn",
+      "ogrn": "Ogrn",
+      "address": "Address",
+      "phone": "Phone",
+      "isActive": "Is Active"
+    }
+  }
+}

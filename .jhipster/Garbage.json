@@ -1,0 +1,25 @@
+{
+  "name": "Garbage",
+  "fields": [
+    {
+      "fieldName": "pockets",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "hugeThings",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20210224191404",
+  "entityTableName": "garbage",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

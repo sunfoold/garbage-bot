@@ -1,0 +1,28 @@
+{
+  "garbageApp": {
+    "address": {
+      "home": {
+        "title": "Addresses",
+        "createLabel": "Создать новый Address",
+        "createOrEditLabel": "Создать или отредактировать Address",
+        "notFound": "No Addresses found"
+      },
+      "created": "Новый Address создан с идентификатором {{ param }}",
+      "updated": "Address обновлен с идентификатором {{ param }}",
+      "deleted": "Address удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Address {{ id }}?"
+      },
+      "detail": {
+        "title": "Address"
+      },
+      "city": "City",
+      "streetBuilding": "Street Building",
+      "level": "Level",
+      "apartment": "Apartment",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "appUser": "App User"
+    }
+  }
+}

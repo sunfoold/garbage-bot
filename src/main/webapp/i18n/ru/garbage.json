@@ -1,0 +1,23 @@
+{
+  "garbageApp": {
+    "garbage": {
+      "home": {
+        "title": "Garbage",
+        "createLabel": "Создать новый Garbage",
+        "createOrEditLabel": "Создать или отредактировать Garbage",
+        "notFound": "No Garbage found"
+      },
+      "created": "Новый Garbage создан с идентификатором {{ param }}",
+      "updated": "Garbage обновлен с идентификатором {{ param }}",
+      "deleted": "Garbage удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Garbage {{ id }}?"
+      },
+      "detail": {
+        "title": "Garbage"
+      },
+      "pockets": "Pockets",
+      "hugeThings": "Huge Things"
+    }
+  }
+}

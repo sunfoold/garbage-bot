@@ -1,0 +1,125 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-order-heading" jhiTranslate="garbageApp.order.home.createOrEditLabel">Create or edit a Order</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.orderDate" for="field_orderDate">Order Date</label>
+                    <div class="d-flex">
+                        <input id="field_orderDate" type="datetime-local" class="form-control" name="orderDate" formControlName="orderDate" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.price" for="field_price">Price</label>
+                    <input type="number" class="form-control" name="price" id="field_price"
+                           formControlName="price"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.finishDate" for="field_finishDate">Finish Date</label>
+                    <div class="d-flex">
+                        <input id="field_finishDate" type="datetime-local" class="form-control" name="finishDate" formControlName="finishDate" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.userPhotoUrl" for="field_userPhotoUrl">User Photo Url</label>
+                    <input type="text" class="form-control" name="userPhotoUrl" id="field_userPhotoUrl"
+                           formControlName="userPhotoUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.courierPhotoUrl" for="field_courierPhotoUrl">Courier Photo Url</label>
+                    <input type="text" class="form-control" name="courierPhotoUrl" id="field_courierPhotoUrl"
+                           formControlName="courierPhotoUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.endOrderPhotoUrl" for="field_endOrderPhotoUrl">End Order Photo Url</label>
+                    <input type="text" class="form-control" name="endOrderPhotoUrl" id="field_endOrderPhotoUrl"
+                           formControlName="endOrderPhotoUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.orderStartDate" for="field_orderStartDate">Order Start Date</label>
+                    <div class="d-flex">
+                        <input id="field_orderStartDate" type="datetime-local" class="form-control" name="orderStartDate" formControlName="orderStartDate" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.orderFinishDate" for="field_orderFinishDate">Order Finish Date</label>
+                    <div class="d-flex">
+                        <input id="field_orderFinishDate" type="datetime-local" class="form-control" name="orderFinishDate" formControlName="orderFinishDate" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.orderStatus" for="field_orderStatus">Order Status</label>
+                    <select class="form-control" name="orderStatus" formControlName="orderStatus" id="field_orderStatus">
+                        <option value="NEW">{{ 'garbageApp.OrderStatus.NEW' | translate }}</option>
+                        <option value="ASSIGNED">{{ 'garbageApp.OrderStatus.ASSIGNED' | translate }}</option>
+                        <option value="CANCELED">{{ 'garbageApp.OrderStatus.CANCELED' | translate }}</option>
+                        <option value="IN_PROGRESS">{{ 'garbageApp.OrderStatus.IN_PROGRESS' | translate }}</option>
+                        <option value="COMPLETED">{{ 'garbageApp.OrderStatus.COMPLETED' | translate }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.courierRatio" for="field_courierRatio">Courier Ratio</label>
+                    <input type="number" class="form-control" name="courierRatio" id="field_courierRatio"
+                           formControlName="courierRatio"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.userRatio" for="field_userRatio">User Ratio</label>
+                    <input type="number" class="form-control" name="userRatio" id="field_userRatio"
+                           formControlName="userRatio"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.garbage" for="field_garbage">Garbage</label>
+                    <select class="form-control" id="field_garbage" name="garbage" formControlName="garbage">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="garbageOption.id === editForm.get('garbage')!.value?.id ? editForm.get('garbage')!.value : garbageOption" *ngFor="let garbageOption of garbage; trackBy: trackById">{{ garbageOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.user" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" formControlName="user">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="appUserOption.id === editForm.get('user')!.value?.id ? editForm.get('user')!.value : appUserOption" *ngFor="let appUserOption of appusers; trackBy: trackById">{{ appUserOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="garbageApp.order.courier" for="field_courier">Courier</label>
+                    <select class="form-control" id="field_courier" name="courier" formControlName="courier">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="courierOption.id === editForm.get('courier')!.value?.id ? editForm.get('courier')!.value : courierOption" *ngFor="let courierOption of couriers; trackBy: trackById">{{ courierOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

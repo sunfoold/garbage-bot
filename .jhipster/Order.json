@@ -1,0 +1,85 @@
+{
+  "name": "Order",
+  "fields": [
+    {
+      "fieldName": "orderDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "finishDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "userPhotoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "courierPhotoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "endOrderPhotoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "orderStartDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "orderFinishDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "orderStatus",
+      "fieldType": "OrderStatus",
+      "fieldValues": "NEW,ASSIGNED,CANCELED,IN_PROGRESS,COMPLETED"
+    },
+    {
+      "fieldName": "courierRatio",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "userRatio",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "garbage",
+      "otherEntityRelationshipName": "order",
+      "relationshipName": "garbage",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "order",
+      "relationshipName": "user",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "courier",
+      "otherEntityRelationshipName": "order",
+      "relationshipName": "courier",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210224190804",
+  "entityTableName": "order",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

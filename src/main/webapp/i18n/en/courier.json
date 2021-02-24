@@ -1,0 +1,28 @@
+{
+  "garbageApp": {
+    "courier": {
+      "home": {
+        "title": "Couriers",
+        "createLabel": "Create a new Courier",
+        "createOrEditLabel": "Create or edit a Courier",
+        "notFound": "No Couriers found"
+      },
+      "created": "A new Courier is created with identifier {{ param }}",
+      "updated": "A Courier is updated with identifier {{ param }}",
+      "deleted": "A Courier is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Courier {{ id }}?"
+      },
+      "detail": {
+        "title": "Courier"
+      },
+      "name": "Name",
+      "phoneNumber": "Phone Number",
+      "photoUrl": "Photo Url",
+      "telegramChatId": "Telegram Chat Id",
+      "joinDate": "Join Date",
+      "balance": "Balance",
+      "company": "Company"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="shift">
+            <h2><span jhiTranslate="garbageApp.shift.detail.title">Shift</span> {{ shift.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="garbageApp.shift.shiftPlanStartDate">Shift Plan Start Date</span></dt>
+                <dd>
+                    <span>{{ shift.shiftPlanStartDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.shift.shiftFactStartDate">Shift Fact Start Date</span></dt>
+                <dd>
+                    <span>{{ shift.shiftFactStartDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.shift.shiftPlanEndDate">Shift Plan End Date</span></dt>
+                <dd>
+                    <span>{{ shift.shiftPlanEndDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.shift.shiftFactEndDate">Shift Fact End Date</span></dt>
+                <dd>
+                    <span>{{ shift.shiftFactEndDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.shift.prepaid">Prepaid</span></dt>
+                <dd>
+                    <span>{{ shift.prepaid }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/shift', shift.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
