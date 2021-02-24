@@ -1,0 +1,105 @@
+
+
+entity Order {
+	orderDate Instant,
+  	price Long,
+    finishDate Instant,
+    userPhotoUrl String,
+    courierPhotoUrl String,
+    endOrderPhotoUrl String,
+    orderStartDate Instant,
+    orderFinishDate Instant,
+    orderStatus OrderStatus,
+    courierRatio Long,
+    userRatio Long    
+}
+
+enum OrderStatus {
+    NEW, ASSIGNED, CANCELED, IN_PROGRESS, COMPLETED
+}
+
+enum PaymentStatus {
+    SUCCESS, FAIL
+}
+
+entity Payment{
+	paymentDate Instant,
+    status PaymentStatus,
+    value Integer
+}
+
+entity AppUser {
+	name String,
+    phoneNumber String,
+    email String,
+    telegramChatId Long,
+    balance Long,
+    promoCode String
+}
+
+entity Courier {
+	name String,
+    phoneNumber String,
+    photoUrl String,
+    telegramChatId Long,
+    joinDate Instant,
+    balance Integer
+}
+
+entity Shift {
+	shiftPlanStartDate Instant,
+    shiftFactStartDate Instant,
+    shiftPlanEndDate Instant,
+    shiftFactEndDate Instant,
+    prepaid Boolean
+}
+
+entity CourierCompany{
+	name String,
+    inn String,
+    ogrn String,
+    address String,
+    phone String,
+    isActive Boolean
+}
+
+entity Garbage {
+	pockets Long,
+    hugeThings Long
+}
+
+entity Address{
+	city String,
+    streetBuilding String,
+    level Long,
+    apartment String,
+    latitude String,
+    longitude String
+}
+
+relationship OneToOne {
+	Order{garbage} to Garbage
+}
+
+relationship ManyToOne {
+	Order{user} to AppUser
+}
+
+relationship ManyToOne {
+	Payment{user} to AppUser
+}
+
+relationship ManyToOne {
+	Order{courier} to Courier
+}
+
+relationship ManyToOne {
+	Courier{company} to CourierCompany
+}
+
+relationship OneToMany {
+ 	AppUser{addresses} to Address
+}
+
+
+service all with serviceImpl 

@@ -1,0 +1,49 @@
+{
+  "name": "Courier",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "photoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telegramChatId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "joinDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "balance",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "courierCompany",
+      "otherEntityRelationshipName": "courier",
+      "relationshipName": "company",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210224191104",
+  "entityTableName": "courier",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

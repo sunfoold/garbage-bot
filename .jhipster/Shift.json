@@ -1,0 +1,37 @@
+{
+  "name": "Shift",
+  "fields": [
+    {
+      "fieldName": "shiftPlanStartDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "shiftFactStartDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "shiftPlanEndDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "shiftFactEndDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "prepaid",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20210224191204",
+  "entityTableName": "shift",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

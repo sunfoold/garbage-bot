@@ -1,0 +1,9 @@
+{
+  "garbageApp": {
+    "PaymentStatus": {
+      "null": "",
+      "SUCCESS": "SUCCESS",
+      "FAIL": "FAIL"
+    }
+  }
+}

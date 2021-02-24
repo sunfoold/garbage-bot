@@ -1,0 +1,26 @@
+{
+  "garbageApp": {
+    "shift": {
+      "home": {
+        "title": "Shifts",
+        "createLabel": "Create a new Shift",
+        "createOrEditLabel": "Create or edit a Shift",
+        "notFound": "No Shifts found"
+      },
+      "created": "A new Shift is created with identifier {{ param }}",
+      "updated": "A Shift is updated with identifier {{ param }}",
+      "deleted": "A Shift is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Shift {{ id }}?"
+      },
+      "detail": {
+        "title": "Shift"
+      },
+      "shiftPlanStartDate": "Shift Plan Start Date",
+      "shiftFactStartDate": "Shift Fact Start Date",
+      "shiftPlanEndDate": "Shift Plan End Date",
+      "shiftFactEndDate": "Shift Fact End Date",
+      "prepaid": "Prepaid"
+    }
+  }
+}

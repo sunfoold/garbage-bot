@@ -1,0 +1,48 @@
+{
+  "name": "AppUser",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "phoneNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "telegramChatId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "balance",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "promoCode",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "address",
+      "otherEntityRelationshipName": "appUser",
+      "relationshipName": "addresses"
+    }
+  ],
+  "changelogDate": "20210224191004",
+  "entityTableName": "app_user",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

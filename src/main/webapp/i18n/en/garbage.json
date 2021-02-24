@@ -1,0 +1,23 @@
+{
+  "garbageApp": {
+    "garbage": {
+      "home": {
+        "title": "Garbage",
+        "createLabel": "Create a new Garbage",
+        "createOrEditLabel": "Create or edit a Garbage",
+        "notFound": "No Garbage found"
+      },
+      "created": "A new Garbage is created with identifier {{ param }}",
+      "updated": "A Garbage is updated with identifier {{ param }}",
+      "deleted": "A Garbage is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Garbage {{ id }}?"
+      },
+      "detail": {
+        "title": "Garbage"
+      },
+      "pockets": "Pockets",
+      "hugeThings": "Huge Things"
+    }
+  }
+}

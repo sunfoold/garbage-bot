@@ -1,0 +1,71 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="garbageApp.courierCompany.home.title">Courier Companies</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-courier-company" [routerLink]="['/courier-company/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="garbageApp.courierCompany.home.createLabel">
+            Create a new Courier Company
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="courierCompanies?.length === 0">
+        <span jhiTranslate="garbageApp.courierCompany.home.notFound">No courierCompanies found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="courierCompanies && courierCompanies.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.courierCompany.name">Name</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.courierCompany.inn">Inn</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.courierCompany.ogrn">Ogrn</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.courierCompany.address">Address</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.courierCompany.phone">Phone</span></th>
+                    <th scope="col" ><span jhiTranslate="garbageApp.courierCompany.isActive">Is Active</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let courierCompany of courierCompanies ;trackBy: trackId">
+                    <td><a [routerLink]="['/courier-company', courierCompany.id, 'view']">{{ courierCompany.id }}</a></td>
+                    <td>{{ courierCompany.name }}</td>
+                    <td>{{ courierCompany.inn }}</td>
+                    <td>{{ courierCompany.ogrn }}</td>
+                    <td>{{ courierCompany.address }}</td>
+                    <td>{{ courierCompany.phone }}</td>
+                    <td>{{ courierCompany.isActive }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/courier-company', courierCompany.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/courier-company', courierCompany.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(courierCompany)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+{
+  "garbageApp": {
+    "courierCompany": {
+      "home": {
+        "title": "Courier Companies",
+        "createLabel": "Create a new Courier Company",
+        "createOrEditLabel": "Create or edit a Courier Company",
+        "notFound": "No Courier Companies found"
+      },
+      "created": "A new Courier Company is created with identifier {{ param }}",
+      "updated": "A Courier Company is updated with identifier {{ param }}",
+      "deleted": "A Courier Company is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Courier Company {{ id }}?"
+      },
+      "detail": {
+        "title": "Courier Company"
+      },
+      "name": "Name",
+      "inn": "Inn",
+      "ogrn": "Ogrn",
+      "address": "Address",
+      "phone": "Phone",
+      "isActive": "Is Active"
+    }
+  }
+}

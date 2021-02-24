@@ -1,0 +1,28 @@
+{
+  "garbageApp": {
+    "appUser": {
+      "home": {
+        "title": "App Users",
+        "createLabel": "Создать новый App User",
+        "createOrEditLabel": "Создать или отредактировать App User",
+        "notFound": "No App Users found"
+      },
+      "created": "Новый App User создан с идентификатором {{ param }}",
+      "updated": "App User обновлен с идентификатором {{ param }}",
+      "deleted": "App User удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить App User {{ id }}?"
+      },
+      "detail": {
+        "title": "App User"
+      },
+      "name": "Name",
+      "phoneNumber": "Phone Number",
+      "email": "Email",
+      "telegramChatId": "Telegram Chat Id",
+      "balance": "Balance",
+      "promoCode": "Promo Code",
+      "addresses": "Addresses"
+    }
+  }
+}

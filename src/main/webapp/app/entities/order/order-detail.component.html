@@ -1,0 +1,88 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="order">
+            <h2><span jhiTranslate="garbageApp.order.detail.title">Order</span> {{ order.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="garbageApp.order.orderDate">Order Date</span></dt>
+                <dd>
+                    <span>{{ order.orderDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.price">Price</span></dt>
+                <dd>
+                    <span>{{ order.price }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.finishDate">Finish Date</span></dt>
+                <dd>
+                    <span>{{ order.finishDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.userPhotoUrl">User Photo Url</span></dt>
+                <dd>
+                    <span>{{ order.userPhotoUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.courierPhotoUrl">Courier Photo Url</span></dt>
+                <dd>
+                    <span>{{ order.courierPhotoUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.endOrderPhotoUrl">End Order Photo Url</span></dt>
+                <dd>
+                    <span>{{ order.endOrderPhotoUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.orderStartDate">Order Start Date</span></dt>
+                <dd>
+                    <span>{{ order.orderStartDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.orderFinishDate">Order Finish Date</span></dt>
+                <dd>
+                    <span>{{ order.orderFinishDate }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.orderStatus">Order Status</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'garbageApp.OrderStatus.' + order.orderStatus }}">{{ order.orderStatus }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.courierRatio">Courier Ratio</span></dt>
+                <dd>
+                    <span>{{ order.courierRatio }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.userRatio">User Ratio</span></dt>
+                <dd>
+                    <span>{{ order.userRatio }}</span>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.garbage">Garbage</span></dt>
+                <dd>
+                    <div *ngIf="order.garbage">
+                        <a [routerLink]="['/garbage', order.garbage?.id, 'view']">{{ order.garbage?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.user">User</span></dt>
+                <dd>
+                    <div *ngIf="order.user">
+                        <a [routerLink]="['/app-user', order.user?.id, 'view']">{{ order.user?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="garbageApp.order.courier">Courier</span></dt>
+                <dd>
+                    <div *ngIf="order.courier">
+                        <a [routerLink]="['/courier', order.courier?.id, 'view']">{{ order.courier?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/order', order.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

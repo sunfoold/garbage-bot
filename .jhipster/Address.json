@@ -1,0 +1,49 @@
+{
+  "name": "Address",
+  "fields": [
+    {
+      "fieldName": "city",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "streetBuilding",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "level",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "apartment",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "latitude",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "longitude",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "addresses",
+      "relationshipName": "appUser",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20210224191504",
+  "entityTableName": "address",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
