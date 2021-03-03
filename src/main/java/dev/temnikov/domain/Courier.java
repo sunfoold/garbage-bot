@@ -1,13 +1,11 @@
 package dev.temnikov.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.time.Instant;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Courier.
@@ -16,7 +14,6 @@ import java.time.Instant;
 @Table(name = "courier")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Courier implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -145,6 +142,7 @@ public class Courier implements Serializable {
     public void setCompany(CourierCompany courierCompany) {
         this.company = courierCompany;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

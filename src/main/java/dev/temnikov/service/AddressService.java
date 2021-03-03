@@ -1,7 +1,6 @@
 package dev.temnikov.service;
 
 import dev.temnikov.domain.Address;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
  * Service Interface for managing {@link Address}.
  */
 public interface AddressService {
-
     /**
      * Save a address.
      *
@@ -24,7 +22,6 @@ public interface AddressService {
      * @return the list of entities.
      */
     List<Address> findAll();
-
 
     /**
      * Get the "id" address.

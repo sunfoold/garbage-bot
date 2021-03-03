@@ -3,19 +3,17 @@ package dev.temnikov.web.rest;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.service.AppUserService;
 import dev.temnikov.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing {@link dev.temnikov.domain.AppUser}.
@@ -23,7 +21,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class AppUserResource {
-
     private final Logger log = LoggerFactory.getLogger(AppUserResource.class);
 
     private static final String ENTITY_NAME = "appUser";
@@ -51,7 +48,8 @@ public class AppUserResource {
             throw new BadRequestAlertException("A new appUser cannot already have an ID", ENTITY_NAME, "idexists");
         }
         AppUser result = appUserService.save(appUser);
-        return ResponseEntity.created(new URI("/api/app-users/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/app-users/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -72,7 +70,8 @@ public class AppUserResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         AppUser result = appUserService.save(appUser);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, appUser.getId().toString()))
             .body(result);
     }
@@ -111,6 +110,9 @@ public class AppUserResource {
     public ResponseEntity<Void> deleteAppUser(@PathVariable Long id) {
         log.debug("REST request to delete AppUser : {}", id);
         appUserService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

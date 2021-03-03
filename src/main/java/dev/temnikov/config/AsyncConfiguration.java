@@ -2,6 +2,7 @@ package dev.temnikov.config;
 
 import io.github.jhipster.async.ExceptionHandlingAsyncTaskExecutor;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;

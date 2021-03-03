@@ -1,16 +1,14 @@
 package dev.temnikov.service.impl;
 
-import dev.temnikov.service.CourierService;
 import dev.temnikov.domain.Courier;
 import dev.temnikov.repository.CourierRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import dev.temnikov.service.CourierService;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Courier}.
@@ -18,7 +16,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CourierServiceImpl implements CourierService {
-
     private final Logger log = LoggerFactory.getLogger(CourierServiceImpl.class);
 
     private final CourierRepository courierRepository;
@@ -40,7 +37,6 @@ public class CourierServiceImpl implements CourierService {
         return courierRepository.findAll();
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public Optional<Courier> findOne(Long id) {
@@ -52,5 +48,10 @@ public class CourierServiceImpl implements CourierService {
     public void delete(Long id) {
         log.debug("Request to delete Courier : {}", id);
         courierRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Courier> findByTelegramChatId(long chatId) {
+        return courierRepository.findByTelegramChatId(chatId);
     }
 }

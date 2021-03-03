@@ -1,7 +1,6 @@
 package dev.temnikov.service;
 
 import dev.temnikov.domain.Payment;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
  * Service Interface for managing {@link Payment}.
  */
 public interface PaymentService {
-
     /**
      * Save a payment.
      *
@@ -24,7 +22,6 @@ public interface PaymentService {
      * @return the list of entities.
      */
     List<Payment> findAll();
-
 
     /**
      * Get the "id" payment.

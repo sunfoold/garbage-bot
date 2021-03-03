@@ -1,10 +1,16 @@
 package dev.temnikov.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import dev.temnikov.GarbageApp;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.repository.AppUserRepository;
 import dev.temnikov.service.AppUserService;
-
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link AppUserResource} REST controller.
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class AppUserResourceIT {
-
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -78,6 +76,7 @@ public class AppUserResourceIT {
             .promoCode(DEFAULT_PROMO_CODE);
         return appUser;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -105,9 +104,8 @@ public class AppUserResourceIT {
     public void createAppUser() throws Exception {
         int databaseSizeBeforeCreate = appUserRepository.findAll().size();
         // Create the AppUser
-        restAppUserMockMvc.perform(post("/api/app-users")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(appUser)))
+        restAppUserMockMvc
+            .perform(post("/api/app-users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(appUser)))
             .andExpect(status().isCreated());
 
         // Validate the AppUser in the database
@@ -131,16 +129,14 @@ public class AppUserResourceIT {
         appUser.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restAppUserMockMvc.perform(post("/api/app-users")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(appUser)))
+        restAppUserMockMvc
+            .perform(post("/api/app-users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(appUser)))
             .andExpect(status().isBadRequest());
 
         // Validate the AppUser in the database
         List<AppUser> appUserList = appUserRepository.findAll();
         assertThat(appUserList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -149,7 +145,8 @@ public class AppUserResourceIT {
         appUserRepository.saveAndFlush(appUser);
 
         // Get all the appUserList
-        restAppUserMockMvc.perform(get("/api/app-users?sort=id,desc"))
+        restAppUserMockMvc
+            .perform(get("/api/app-users?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(appUser.getId().intValue())))
@@ -160,7 +157,7 @@ public class AppUserResourceIT {
             .andExpect(jsonPath("$.[*].balance").value(hasItem(DEFAULT_BALANCE.intValue())))
             .andExpect(jsonPath("$.[*].promoCode").value(hasItem(DEFAULT_PROMO_CODE)));
     }
-    
+
     @Test
     @Transactional
     public void getAppUser() throws Exception {
@@ -168,7 +165,8 @@ public class AppUserResourceIT {
         appUserRepository.saveAndFlush(appUser);
 
         // Get the appUser
-        restAppUserMockMvc.perform(get("/api/app-users/{id}", appUser.getId()))
+        restAppUserMockMvc
+            .perform(get("/api/app-users/{id}", appUser.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(appUser.getId().intValue()))
@@ -179,12 +177,12 @@ public class AppUserResourceIT {
             .andExpect(jsonPath("$.balance").value(DEFAULT_BALANCE.intValue()))
             .andExpect(jsonPath("$.promoCode").value(DEFAULT_PROMO_CODE));
     }
+
     @Test
     @Transactional
     public void getNonExistingAppUser() throws Exception {
         // Get the appUser
-        restAppUserMockMvc.perform(get("/api/app-users/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restAppUserMockMvc.perform(get("/api/app-users/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -207,9 +205,10 @@ public class AppUserResourceIT {
             .balance(UPDATED_BALANCE)
             .promoCode(UPDATED_PROMO_CODE);
 
-        restAppUserMockMvc.perform(put("/api/app-users")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedAppUser)))
+        restAppUserMockMvc
+            .perform(
+                put("/api/app-users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedAppUser))
+            )
             .andExpect(status().isOk());
 
         // Validate the AppUser in the database
@@ -230,9 +229,8 @@ public class AppUserResourceIT {
         int databaseSizeBeforeUpdate = appUserRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restAppUserMockMvc.perform(put("/api/app-users")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(appUser)))
+        restAppUserMockMvc
+            .perform(put("/api/app-users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(appUser)))
             .andExpect(status().isBadRequest());
 
         // Validate the AppUser in the database
@@ -249,8 +247,8 @@ public class AppUserResourceIT {
         int databaseSizeBeforeDelete = appUserRepository.findAll().size();
 
         // Delete the appUser
-        restAppUserMockMvc.perform(delete("/api/app-users/{id}", appUser.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restAppUserMockMvc
+            .perform(delete("/api/app-users/{id}", appUser.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

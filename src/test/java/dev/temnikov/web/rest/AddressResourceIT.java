@@ -1,10 +1,16 @@
 package dev.temnikov.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import dev.temnikov.GarbageApp;
 import dev.temnikov.domain.Address;
 import dev.temnikov.repository.AddressRepository;
 import dev.temnikov.service.AddressService;
-
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link AddressResource} REST controller.
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class AddressResourceIT {
-
     private static final String DEFAULT_CITY = "AAAAAAAAAA";
     private static final String UPDATED_CITY = "BBBBBBBBBB";
 
@@ -78,6 +76,7 @@ public class AddressResourceIT {
             .longitude(DEFAULT_LONGITUDE);
         return address;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -105,9 +104,8 @@ public class AddressResourceIT {
     public void createAddress() throws Exception {
         int databaseSizeBeforeCreate = addressRepository.findAll().size();
         // Create the Address
-        restAddressMockMvc.perform(post("/api/addresses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(address)))
+        restAddressMockMvc
+            .perform(post("/api/addresses").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(address)))
             .andExpect(status().isCreated());
 
         // Validate the Address in the database
@@ -131,16 +129,14 @@ public class AddressResourceIT {
         address.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restAddressMockMvc.perform(post("/api/addresses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(address)))
+        restAddressMockMvc
+            .perform(post("/api/addresses").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(address)))
             .andExpect(status().isBadRequest());
 
         // Validate the Address in the database
         List<Address> addressList = addressRepository.findAll();
         assertThat(addressList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -149,7 +145,8 @@ public class AddressResourceIT {
         addressRepository.saveAndFlush(address);
 
         // Get all the addressList
-        restAddressMockMvc.perform(get("/api/addresses?sort=id,desc"))
+        restAddressMockMvc
+            .perform(get("/api/addresses?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(address.getId().intValue())))
@@ -160,7 +157,7 @@ public class AddressResourceIT {
             .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE)))
             .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE)));
     }
-    
+
     @Test
     @Transactional
     public void getAddress() throws Exception {
@@ -168,7 +165,8 @@ public class AddressResourceIT {
         addressRepository.saveAndFlush(address);
 
         // Get the address
-        restAddressMockMvc.perform(get("/api/addresses/{id}", address.getId()))
+        restAddressMockMvc
+            .perform(get("/api/addresses/{id}", address.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(address.getId().intValue()))
@@ -179,12 +177,12 @@ public class AddressResourceIT {
             .andExpect(jsonPath("$.latitude").value(DEFAULT_LATITUDE))
             .andExpect(jsonPath("$.longitude").value(DEFAULT_LONGITUDE));
     }
+
     @Test
     @Transactional
     public void getNonExistingAddress() throws Exception {
         // Get the address
-        restAddressMockMvc.perform(get("/api/addresses/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restAddressMockMvc.perform(get("/api/addresses/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -207,9 +205,10 @@ public class AddressResourceIT {
             .latitude(UPDATED_LATITUDE)
             .longitude(UPDATED_LONGITUDE);
 
-        restAddressMockMvc.perform(put("/api/addresses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedAddress)))
+        restAddressMockMvc
+            .perform(
+                put("/api/addresses").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedAddress))
+            )
             .andExpect(status().isOk());
 
         // Validate the Address in the database
@@ -230,9 +229,8 @@ public class AddressResourceIT {
         int databaseSizeBeforeUpdate = addressRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restAddressMockMvc.perform(put("/api/addresses")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(address)))
+        restAddressMockMvc
+            .perform(put("/api/addresses").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(address)))
             .andExpect(status().isBadRequest());
 
         // Validate the Address in the database
@@ -249,8 +247,8 @@ public class AddressResourceIT {
         int databaseSizeBeforeDelete = addressRepository.findAll().size();
 
         // Delete the address
-        restAddressMockMvc.perform(delete("/api/addresses/{id}", address.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restAddressMockMvc
+            .perform(delete("/api/addresses/{id}", address.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

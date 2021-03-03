@@ -1,7 +1,7 @@
 package dev.temnikov.service;
 
+import dev.temnikov.domain.Courier;
 import dev.temnikov.domain.Order;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +9,6 @@ import java.util.Optional;
  * Service Interface for managing {@link Order}.
  */
 public interface OrderService {
-
     /**
      * Save a order.
      *
@@ -25,7 +24,6 @@ public interface OrderService {
      */
     List<Order> findAll();
 
-
     /**
      * Get the "id" order.
      *
@@ -40,4 +38,6 @@ public interface OrderService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Order assignOrderToCourier(Order order, Courier courier);
 }

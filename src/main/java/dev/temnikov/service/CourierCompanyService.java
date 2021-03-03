@@ -1,7 +1,6 @@
 package dev.temnikov.service;
 
 import dev.temnikov.domain.CourierCompany;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
  * Service Interface for managing {@link CourierCompany}.
  */
 public interface CourierCompanyService {
-
     /**
      * Save a courierCompany.
      *
@@ -24,7 +22,6 @@ public interface CourierCompanyService {
      * @return the list of entities.
      */
     List<CourierCompany> findAll();
-
 
     /**
      * Get the "id" courierCompany.

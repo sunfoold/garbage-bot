@@ -1,16 +1,14 @@
 package dev.temnikov.service.impl;
 
-import dev.temnikov.service.AddressService;
 import dev.temnikov.domain.Address;
 import dev.temnikov.repository.AddressRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import dev.temnikov.service.AddressService;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Address}.
@@ -18,7 +16,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class AddressServiceImpl implements AddressService {
-
     private final Logger log = LoggerFactory.getLogger(AddressServiceImpl.class);
 
     private final AddressRepository addressRepository;
@@ -39,7 +36,6 @@ public class AddressServiceImpl implements AddressService {
         log.debug("Request to get all Addresses");
         return addressRepository.findAll();
     }
-
 
     @Override
     @Transactional(readOnly = true)

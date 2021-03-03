@@ -1,7 +1,6 @@
 package dev.temnikov.service;
 
 import dev.temnikov.domain.Courier;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
  * Service Interface for managing {@link Courier}.
  */
 public interface CourierService {
-
     /**
      * Save a courier.
      *
@@ -25,7 +23,6 @@ public interface CourierService {
      */
     List<Courier> findAll();
 
-
     /**
      * Get the "id" courier.
      *
@@ -40,4 +37,6 @@ public interface CourierService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Optional<Courier> findByTelegramChatId(long chatId);
 }

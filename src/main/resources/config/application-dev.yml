@@ -45,9 +45,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/garbage
-    username: garbage
-    password:
+    url: jdbc:postgresql://localhost:5432/trashBot
+    username: postgres
+    password: admin
     hikari:
       poolName: Hikari
       auto-commit: false

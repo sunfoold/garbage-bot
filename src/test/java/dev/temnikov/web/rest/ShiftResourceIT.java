@@ -1,10 +1,18 @@
 package dev.temnikov.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import dev.temnikov.GarbageApp;
 import dev.temnikov.domain.Shift;
 import dev.temnikov.repository.ShiftRepository;
 import dev.temnikov.service.ShiftService;
-
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link ShiftResource} REST controller.
@@ -31,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class ShiftResourceIT {
-
     private static final Instant DEFAULT_SHIFT_PLAN_START_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_SHIFT_PLAN_START_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -76,6 +74,7 @@ public class ShiftResourceIT {
             .prepaid(DEFAULT_PREPAID);
         return shift;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -102,9 +101,8 @@ public class ShiftResourceIT {
     public void createShift() throws Exception {
         int databaseSizeBeforeCreate = shiftRepository.findAll().size();
         // Create the Shift
-        restShiftMockMvc.perform(post("/api/shifts")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(shift)))
+        restShiftMockMvc
+            .perform(post("/api/shifts").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shift)))
             .andExpect(status().isCreated());
 
         // Validate the Shift in the database
@@ -127,16 +125,14 @@ public class ShiftResourceIT {
         shift.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restShiftMockMvc.perform(post("/api/shifts")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(shift)))
+        restShiftMockMvc
+            .perform(post("/api/shifts").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shift)))
             .andExpect(status().isBadRequest());
 
         // Validate the Shift in the database
         List<Shift> shiftList = shiftRepository.findAll();
         assertThat(shiftList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -145,7 +141,8 @@ public class ShiftResourceIT {
         shiftRepository.saveAndFlush(shift);
 
         // Get all the shiftList
-        restShiftMockMvc.perform(get("/api/shifts?sort=id,desc"))
+        restShiftMockMvc
+            .perform(get("/api/shifts?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(shift.getId().intValue())))
@@ -155,7 +152,7 @@ public class ShiftResourceIT {
             .andExpect(jsonPath("$.[*].shiftFactEndDate").value(hasItem(DEFAULT_SHIFT_FACT_END_DATE.toString())))
             .andExpect(jsonPath("$.[*].prepaid").value(hasItem(DEFAULT_PREPAID.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getShift() throws Exception {
@@ -163,7 +160,8 @@ public class ShiftResourceIT {
         shiftRepository.saveAndFlush(shift);
 
         // Get the shift
-        restShiftMockMvc.perform(get("/api/shifts/{id}", shift.getId()))
+        restShiftMockMvc
+            .perform(get("/api/shifts/{id}", shift.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(shift.getId().intValue()))
@@ -173,12 +171,12 @@ public class ShiftResourceIT {
             .andExpect(jsonPath("$.shiftFactEndDate").value(DEFAULT_SHIFT_FACT_END_DATE.toString()))
             .andExpect(jsonPath("$.prepaid").value(DEFAULT_PREPAID.booleanValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingShift() throws Exception {
         // Get the shift
-        restShiftMockMvc.perform(get("/api/shifts/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restShiftMockMvc.perform(get("/api/shifts/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -200,9 +198,8 @@ public class ShiftResourceIT {
             .shiftFactEndDate(UPDATED_SHIFT_FACT_END_DATE)
             .prepaid(UPDATED_PREPAID);
 
-        restShiftMockMvc.perform(put("/api/shifts")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedShift)))
+        restShiftMockMvc
+            .perform(put("/api/shifts").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedShift)))
             .andExpect(status().isOk());
 
         // Validate the Shift in the database
@@ -222,9 +219,8 @@ public class ShiftResourceIT {
         int databaseSizeBeforeUpdate = shiftRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restShiftMockMvc.perform(put("/api/shifts")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(shift)))
+        restShiftMockMvc
+            .perform(put("/api/shifts").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(shift)))
             .andExpect(status().isBadRequest());
 
         // Validate the Shift in the database
@@ -241,8 +237,8 @@ public class ShiftResourceIT {
         int databaseSizeBeforeDelete = shiftRepository.findAll().size();
 
         // Delete the shift
-        restShiftMockMvc.perform(delete("/api/shifts/{id}", shift.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restShiftMockMvc
+            .perform(delete("/api/shifts/{id}", shift.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

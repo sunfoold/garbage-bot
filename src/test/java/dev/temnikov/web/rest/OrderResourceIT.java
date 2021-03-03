@@ -1,10 +1,19 @@
 package dev.temnikov.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import dev.temnikov.GarbageApp;
 import dev.temnikov.domain.Order;
+import dev.temnikov.domain.enumeration.OrderStatus;
 import dev.temnikov.repository.OrderRepository;
 import dev.temnikov.service.OrderService;
-
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import dev.temnikov.domain.enumeration.OrderStatus;
 /**
  * Integration tests for the {@link OrderResource} REST controller.
  */
@@ -32,7 +31,6 @@ import dev.temnikov.domain.enumeration.OrderStatus;
 @AutoConfigureMockMvc
 @WithMockUser
 public class OrderResourceIT {
-
     private static final Instant DEFAULT_ORDER_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_ORDER_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -101,6 +99,7 @@ public class OrderResourceIT {
             .userRatio(DEFAULT_USER_RATIO);
         return order;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -133,9 +132,8 @@ public class OrderResourceIT {
     public void createOrder() throws Exception {
         int databaseSizeBeforeCreate = orderRepository.findAll().size();
         // Create the Order
-        restOrderMockMvc.perform(post("/api/orders")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(order)))
+        restOrderMockMvc
+            .perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(order)))
             .andExpect(status().isCreated());
 
         // Validate the Order in the database
@@ -164,16 +162,14 @@ public class OrderResourceIT {
         order.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restOrderMockMvc.perform(post("/api/orders")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(order)))
+        restOrderMockMvc
+            .perform(post("/api/orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(order)))
             .andExpect(status().isBadRequest());
 
         // Validate the Order in the database
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -182,7 +178,8 @@ public class OrderResourceIT {
         orderRepository.saveAndFlush(order);
 
         // Get all the orderList
-        restOrderMockMvc.perform(get("/api/orders?sort=id,desc"))
+        restOrderMockMvc
+            .perform(get("/api/orders?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(order.getId().intValue())))
@@ -198,7 +195,7 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.[*].courierRatio").value(hasItem(DEFAULT_COURIER_RATIO.intValue())))
             .andExpect(jsonPath("$.[*].userRatio").value(hasItem(DEFAULT_USER_RATIO.intValue())));
     }
-    
+
     @Test
     @Transactional
     public void getOrder() throws Exception {
@@ -206,7 +203,8 @@ public class OrderResourceIT {
         orderRepository.saveAndFlush(order);
 
         // Get the order
-        restOrderMockMvc.perform(get("/api/orders/{id}", order.getId()))
+        restOrderMockMvc
+            .perform(get("/api/orders/{id}", order.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(order.getId().intValue()))
@@ -222,12 +220,12 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.courierRatio").value(DEFAULT_COURIER_RATIO.intValue()))
             .andExpect(jsonPath("$.userRatio").value(DEFAULT_USER_RATIO.intValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingOrder() throws Exception {
         // Get the order
-        restOrderMockMvc.perform(get("/api/orders/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restOrderMockMvc.perform(get("/api/orders/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -255,9 +253,8 @@ public class OrderResourceIT {
             .courierRatio(UPDATED_COURIER_RATIO)
             .userRatio(UPDATED_USER_RATIO);
 
-        restOrderMockMvc.perform(put("/api/orders")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedOrder)))
+        restOrderMockMvc
+            .perform(put("/api/orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedOrder)))
             .andExpect(status().isOk());
 
         // Validate the Order in the database
@@ -283,9 +280,8 @@ public class OrderResourceIT {
         int databaseSizeBeforeUpdate = orderRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restOrderMockMvc.perform(put("/api/orders")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(order)))
+        restOrderMockMvc
+            .perform(put("/api/orders").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(order)))
             .andExpect(status().isBadRequest());
 
         // Validate the Order in the database
@@ -302,8 +298,8 @@ public class OrderResourceIT {
         int databaseSizeBeforeDelete = orderRepository.findAll().size();
 
         // Delete the order
-        restOrderMockMvc.perform(delete("/api/orders/{id}", order.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restOrderMockMvc
+            .perform(delete("/api/orders/{id}", order.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

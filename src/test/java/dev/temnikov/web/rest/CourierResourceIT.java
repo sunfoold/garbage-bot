@@ -1,10 +1,18 @@
 package dev.temnikov.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import dev.temnikov.GarbageApp;
 import dev.temnikov.domain.Courier;
 import dev.temnikov.repository.CourierRepository;
 import dev.temnikov.service.CourierService;
-
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link CourierResource} REST controller.
@@ -31,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class CourierResourceIT {
-
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -80,6 +78,7 @@ public class CourierResourceIT {
             .balance(DEFAULT_BALANCE);
         return courier;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -107,9 +106,8 @@ public class CourierResourceIT {
     public void createCourier() throws Exception {
         int databaseSizeBeforeCreate = courierRepository.findAll().size();
         // Create the Courier
-        restCourierMockMvc.perform(post("/api/couriers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(courier)))
+        restCourierMockMvc
+            .perform(post("/api/couriers").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(courier)))
             .andExpect(status().isCreated());
 
         // Validate the Courier in the database
@@ -133,16 +131,14 @@ public class CourierResourceIT {
         courier.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCourierMockMvc.perform(post("/api/couriers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(courier)))
+        restCourierMockMvc
+            .perform(post("/api/couriers").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(courier)))
             .andExpect(status().isBadRequest());
 
         // Validate the Courier in the database
         List<Courier> courierList = courierRepository.findAll();
         assertThat(courierList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -151,7 +147,8 @@ public class CourierResourceIT {
         courierRepository.saveAndFlush(courier);
 
         // Get all the courierList
-        restCourierMockMvc.perform(get("/api/couriers?sort=id,desc"))
+        restCourierMockMvc
+            .perform(get("/api/couriers?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(courier.getId().intValue())))
@@ -162,7 +159,7 @@ public class CourierResourceIT {
             .andExpect(jsonPath("$.[*].joinDate").value(hasItem(DEFAULT_JOIN_DATE.toString())))
             .andExpect(jsonPath("$.[*].balance").value(hasItem(DEFAULT_BALANCE)));
     }
-    
+
     @Test
     @Transactional
     public void getCourier() throws Exception {
@@ -170,7 +167,8 @@ public class CourierResourceIT {
         courierRepository.saveAndFlush(courier);
 
         // Get the courier
-        restCourierMockMvc.perform(get("/api/couriers/{id}", courier.getId()))
+        restCourierMockMvc
+            .perform(get("/api/couriers/{id}", courier.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(courier.getId().intValue()))
@@ -181,12 +179,12 @@ public class CourierResourceIT {
             .andExpect(jsonPath("$.joinDate").value(DEFAULT_JOIN_DATE.toString()))
             .andExpect(jsonPath("$.balance").value(DEFAULT_BALANCE));
     }
+
     @Test
     @Transactional
     public void getNonExistingCourier() throws Exception {
         // Get the courier
-        restCourierMockMvc.perform(get("/api/couriers/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCourierMockMvc.perform(get("/api/couriers/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -209,9 +207,10 @@ public class CourierResourceIT {
             .joinDate(UPDATED_JOIN_DATE)
             .balance(UPDATED_BALANCE);
 
-        restCourierMockMvc.perform(put("/api/couriers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCourier)))
+        restCourierMockMvc
+            .perform(
+                put("/api/couriers").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedCourier))
+            )
             .andExpect(status().isOk());
 
         // Validate the Courier in the database
@@ -232,9 +231,8 @@ public class CourierResourceIT {
         int databaseSizeBeforeUpdate = courierRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCourierMockMvc.perform(put("/api/couriers")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(courier)))
+        restCourierMockMvc
+            .perform(put("/api/couriers").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(courier)))
             .andExpect(status().isBadRequest());
 
         // Validate the Courier in the database
@@ -251,8 +249,8 @@ public class CourierResourceIT {
         int databaseSizeBeforeDelete = courierRepository.findAll().size();
 
         // Delete the courier
-        restCourierMockMvc.perform(delete("/api/couriers/{id}", courier.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restCourierMockMvc
+            .perform(delete("/api/couriers/{id}", courier.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

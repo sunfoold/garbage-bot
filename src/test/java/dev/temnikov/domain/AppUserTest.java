@@ -1,8 +1,9 @@
 package dev.temnikov.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import dev.temnikov.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
 
 public class AppUserTest {
 

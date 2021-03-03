@@ -1,15 +1,12 @@
 package dev.temnikov.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
+import dev.temnikov.domain.enumeration.PaymentStatus;
 import java.io.Serializable;
 import java.time.Instant;
-
-import dev.temnikov.domain.enumeration.PaymentStatus;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Payment.
@@ -18,7 +15,6 @@ import dev.temnikov.domain.enumeration.PaymentStatus;
 @Table(name = "payment")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Payment implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -100,6 +96,7 @@ public class Payment implements Serializable {
     public void setUser(AppUser appUser) {
         this.user = appUser;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

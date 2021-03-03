@@ -1,12 +1,10 @@
 package dev.temnikov.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A Address.
@@ -15,7 +13,6 @@ import java.io.Serializable;
 @Table(name = "address")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Address implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -41,7 +38,7 @@ public class Address implements Serializable {
     @Column(name = "longitude")
     private String longitude;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JsonIgnoreProperties(value = "addresses", allowSetters = true)
     private AppUser appUser;
 
@@ -144,6 +141,7 @@ public class Address implements Serializable {
     public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

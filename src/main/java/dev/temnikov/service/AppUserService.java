@@ -1,7 +1,6 @@
 package dev.temnikov.service;
 
 import dev.temnikov.domain.AppUser;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
  * Service Interface for managing {@link AppUser}.
  */
 public interface AppUserService {
-
     /**
      * Save a appUser.
      *
@@ -25,7 +23,6 @@ public interface AppUserService {
      */
     List<AppUser> findAll();
 
-
     /**
      * Get the "id" appUser.
      *
@@ -40,4 +37,8 @@ public interface AppUserService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Optional<AppUser> findByTelegramChatId(Long chatId);
+
+    Optional<AppUser> findByUserPhone(String phoneNumber);
 }

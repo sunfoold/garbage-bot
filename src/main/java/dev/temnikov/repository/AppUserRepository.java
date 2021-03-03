@@ -1,7 +1,7 @@
 package dev.temnikov.repository;
 
 import dev.temnikov.domain.AppUser;
-
+import java.util.Optional;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +11,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+    Optional<AppUser> findByTelegramChatId(Long aLong);
+
+    Optional<AppUser> findByPhoneNumber(String phoneNumber);
 }

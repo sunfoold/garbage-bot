@@ -1,16 +1,14 @@
 package dev.temnikov.service.impl;
 
-import dev.temnikov.service.ShiftService;
 import dev.temnikov.domain.Shift;
 import dev.temnikov.repository.ShiftRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import dev.temnikov.service.ShiftService;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Shift}.
@@ -18,7 +16,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ShiftServiceImpl implements ShiftService {
-
     private final Logger log = LoggerFactory.getLogger(ShiftServiceImpl.class);
 
     private final ShiftRepository shiftRepository;
@@ -39,7 +36,6 @@ public class ShiftServiceImpl implements ShiftService {
         log.debug("Request to get all Shifts");
         return shiftRepository.findAll();
     }
-
 
     @Override
     @Transactional(readOnly = true)

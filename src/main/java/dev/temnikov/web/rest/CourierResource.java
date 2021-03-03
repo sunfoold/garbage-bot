@@ -3,19 +3,17 @@ package dev.temnikov.web.rest;
 import dev.temnikov.domain.Courier;
 import dev.temnikov.service.CourierService;
 import dev.temnikov.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing {@link dev.temnikov.domain.Courier}.
@@ -23,7 +21,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class CourierResource {
-
     private final Logger log = LoggerFactory.getLogger(CourierResource.class);
 
     private static final String ENTITY_NAME = "courier";
@@ -51,7 +48,8 @@ public class CourierResource {
             throw new BadRequestAlertException("A new courier cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Courier result = courierService.save(courier);
-        return ResponseEntity.created(new URI("/api/couriers/" + result.getId()))
+        return ResponseEntity
+            .created(new URI("/api/couriers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
@@ -72,7 +70,8 @@ public class CourierResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Courier result = courierService.save(courier);
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, courier.getId().toString()))
             .body(result);
     }
@@ -111,6 +110,9 @@ public class CourierResource {
     public ResponseEntity<Void> deleteCourier(@PathVariable Long id) {
         log.debug("REST request to delete Courier : {}", id);
         courierService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

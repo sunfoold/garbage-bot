@@ -1,10 +1,16 @@
 package dev.temnikov.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import dev.temnikov.GarbageApp;
 import dev.temnikov.domain.CourierCompany;
 import dev.temnikov.repository.CourierCompanyRepository;
 import dev.temnikov.service.CourierCompanyService;
-
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link CourierCompanyResource} REST controller.
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class CourierCompanyResourceIT {
-
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -78,6 +76,7 @@ public class CourierCompanyResourceIT {
             .isActive(DEFAULT_IS_ACTIVE);
         return courierCompany;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -105,9 +104,12 @@ public class CourierCompanyResourceIT {
     public void createCourierCompany() throws Exception {
         int databaseSizeBeforeCreate = courierCompanyRepository.findAll().size();
         // Create the CourierCompany
-        restCourierCompanyMockMvc.perform(post("/api/courier-companies")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(courierCompany)))
+        restCourierCompanyMockMvc
+            .perform(
+                post("/api/courier-companies")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(courierCompany))
+            )
             .andExpect(status().isCreated());
 
         // Validate the CourierCompany in the database
@@ -131,16 +133,18 @@ public class CourierCompanyResourceIT {
         courierCompany.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCourierCompanyMockMvc.perform(post("/api/courier-companies")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(courierCompany)))
+        restCourierCompanyMockMvc
+            .perform(
+                post("/api/courier-companies")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(courierCompany))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the CourierCompany in the database
         List<CourierCompany> courierCompanyList = courierCompanyRepository.findAll();
         assertThat(courierCompanyList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -149,7 +153,8 @@ public class CourierCompanyResourceIT {
         courierCompanyRepository.saveAndFlush(courierCompany);
 
         // Get all the courierCompanyList
-        restCourierCompanyMockMvc.perform(get("/api/courier-companies?sort=id,desc"))
+        restCourierCompanyMockMvc
+            .perform(get("/api/courier-companies?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(courierCompany.getId().intValue())))
@@ -160,7 +165,7 @@ public class CourierCompanyResourceIT {
             .andExpect(jsonPath("$.[*].phone").value(hasItem(DEFAULT_PHONE)))
             .andExpect(jsonPath("$.[*].isActive").value(hasItem(DEFAULT_IS_ACTIVE.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getCourierCompany() throws Exception {
@@ -168,7 +173,8 @@ public class CourierCompanyResourceIT {
         courierCompanyRepository.saveAndFlush(courierCompany);
 
         // Get the courierCompany
-        restCourierCompanyMockMvc.perform(get("/api/courier-companies/{id}", courierCompany.getId()))
+        restCourierCompanyMockMvc
+            .perform(get("/api/courier-companies/{id}", courierCompany.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(courierCompany.getId().intValue()))
@@ -179,12 +185,12 @@ public class CourierCompanyResourceIT {
             .andExpect(jsonPath("$.phone").value(DEFAULT_PHONE))
             .andExpect(jsonPath("$.isActive").value(DEFAULT_IS_ACTIVE.booleanValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingCourierCompany() throws Exception {
         // Get the courierCompany
-        restCourierCompanyMockMvc.perform(get("/api/courier-companies/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCourierCompanyMockMvc.perform(get("/api/courier-companies/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -207,9 +213,12 @@ public class CourierCompanyResourceIT {
             .phone(UPDATED_PHONE)
             .isActive(UPDATED_IS_ACTIVE);
 
-        restCourierCompanyMockMvc.perform(put("/api/courier-companies")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCourierCompany)))
+        restCourierCompanyMockMvc
+            .perform(
+                put("/api/courier-companies")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedCourierCompany))
+            )
             .andExpect(status().isOk());
 
         // Validate the CourierCompany in the database
@@ -230,9 +239,12 @@ public class CourierCompanyResourceIT {
         int databaseSizeBeforeUpdate = courierCompanyRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCourierCompanyMockMvc.perform(put("/api/courier-companies")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(courierCompany)))
+        restCourierCompanyMockMvc
+            .perform(
+                put("/api/courier-companies")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(courierCompany))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the CourierCompany in the database
@@ -249,8 +261,8 @@ public class CourierCompanyResourceIT {
         int databaseSizeBeforeDelete = courierCompanyRepository.findAll().size();
 
         // Delete the courierCompany
-        restCourierCompanyMockMvc.perform(delete("/api/courier-companies/{id}", courierCompany.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restCourierCompanyMockMvc
+            .perform(delete("/api/courier-companies/{id}", courierCompany.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

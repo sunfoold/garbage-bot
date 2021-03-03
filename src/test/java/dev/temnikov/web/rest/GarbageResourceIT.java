@@ -1,10 +1,16 @@
 package dev.temnikov.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import dev.temnikov.GarbageApp;
 import dev.temnikov.domain.Garbage;
 import dev.temnikov.repository.GarbageRepository;
 import dev.temnikov.service.GarbageService;
-
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link GarbageResource} REST controller.
@@ -29,7 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class GarbageResourceIT {
-
     private static final Long DEFAULT_POCKETS = 1L;
     private static final Long UPDATED_POCKETS = 2L;
 
@@ -57,11 +55,10 @@ public class GarbageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Garbage createEntity(EntityManager em) {
-        Garbage garbage = new Garbage()
-            .pockets(DEFAULT_POCKETS)
-            .hugeThings(DEFAULT_HUGE_THINGS);
+        Garbage garbage = new Garbage().pockets(DEFAULT_POCKETS).hugeThings(DEFAULT_HUGE_THINGS);
         return garbage;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -69,9 +66,7 @@ public class GarbageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Garbage createUpdatedEntity(EntityManager em) {
-        Garbage garbage = new Garbage()
-            .pockets(UPDATED_POCKETS)
-            .hugeThings(UPDATED_HUGE_THINGS);
+        Garbage garbage = new Garbage().pockets(UPDATED_POCKETS).hugeThings(UPDATED_HUGE_THINGS);
         return garbage;
     }
 
@@ -85,9 +80,8 @@ public class GarbageResourceIT {
     public void createGarbage() throws Exception {
         int databaseSizeBeforeCreate = garbageRepository.findAll().size();
         // Create the Garbage
-        restGarbageMockMvc.perform(post("/api/garbage")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(garbage)))
+        restGarbageMockMvc
+            .perform(post("/api/garbage").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(garbage)))
             .andExpect(status().isCreated());
 
         // Validate the Garbage in the database
@@ -107,16 +101,14 @@ public class GarbageResourceIT {
         garbage.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restGarbageMockMvc.perform(post("/api/garbage")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(garbage)))
+        restGarbageMockMvc
+            .perform(post("/api/garbage").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(garbage)))
             .andExpect(status().isBadRequest());
 
         // Validate the Garbage in the database
         List<Garbage> garbageList = garbageRepository.findAll();
         assertThat(garbageList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -125,14 +117,15 @@ public class GarbageResourceIT {
         garbageRepository.saveAndFlush(garbage);
 
         // Get all the garbageList
-        restGarbageMockMvc.perform(get("/api/garbage?sort=id,desc"))
+        restGarbageMockMvc
+            .perform(get("/api/garbage?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(garbage.getId().intValue())))
             .andExpect(jsonPath("$.[*].pockets").value(hasItem(DEFAULT_POCKETS.intValue())))
             .andExpect(jsonPath("$.[*].hugeThings").value(hasItem(DEFAULT_HUGE_THINGS.intValue())));
     }
-    
+
     @Test
     @Transactional
     public void getGarbage() throws Exception {
@@ -140,19 +133,20 @@ public class GarbageResourceIT {
         garbageRepository.saveAndFlush(garbage);
 
         // Get the garbage
-        restGarbageMockMvc.perform(get("/api/garbage/{id}", garbage.getId()))
+        restGarbageMockMvc
+            .perform(get("/api/garbage/{id}", garbage.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(garbage.getId().intValue()))
             .andExpect(jsonPath("$.pockets").value(DEFAULT_POCKETS.intValue()))
             .andExpect(jsonPath("$.hugeThings").value(DEFAULT_HUGE_THINGS.intValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingGarbage() throws Exception {
         // Get the garbage
-        restGarbageMockMvc.perform(get("/api/garbage/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restGarbageMockMvc.perform(get("/api/garbage/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -167,13 +161,10 @@ public class GarbageResourceIT {
         Garbage updatedGarbage = garbageRepository.findById(garbage.getId()).get();
         // Disconnect from session so that the updates on updatedGarbage are not directly saved in db
         em.detach(updatedGarbage);
-        updatedGarbage
-            .pockets(UPDATED_POCKETS)
-            .hugeThings(UPDATED_HUGE_THINGS);
+        updatedGarbage.pockets(UPDATED_POCKETS).hugeThings(UPDATED_HUGE_THINGS);
 
-        restGarbageMockMvc.perform(put("/api/garbage")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedGarbage)))
+        restGarbageMockMvc
+            .perform(put("/api/garbage").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedGarbage)))
             .andExpect(status().isOk());
 
         // Validate the Garbage in the database
@@ -190,9 +181,8 @@ public class GarbageResourceIT {
         int databaseSizeBeforeUpdate = garbageRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restGarbageMockMvc.perform(put("/api/garbage")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(garbage)))
+        restGarbageMockMvc
+            .perform(put("/api/garbage").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(garbage)))
             .andExpect(status().isBadRequest());
 
         // Validate the Garbage in the database
@@ -209,8 +199,8 @@ public class GarbageResourceIT {
         int databaseSizeBeforeDelete = garbageRepository.findAll().size();
 
         // Delete the garbage
-        restGarbageMockMvc.perform(delete("/api/garbage/{id}", garbage.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restGarbageMockMvc
+            .perform(delete("/api/garbage/{id}", garbage.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

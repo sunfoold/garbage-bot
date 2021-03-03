@@ -1,7 +1,6 @@
 package dev.temnikov.repository;
 
 import dev.temnikov.domain.Garbage;
-
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface GarbageRepository extends JpaRepository<Garbage, Long> {
-}
+public interface GarbageRepository extends JpaRepository<Garbage, Long> {}

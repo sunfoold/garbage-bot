@@ -1,15 +1,12 @@
 package dev.temnikov.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
+import dev.temnikov.domain.enumeration.OrderStatus;
 import java.io.Serializable;
 import java.time.Instant;
-
-import dev.temnikov.domain.enumeration.OrderStatus;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Order.
@@ -18,7 +15,6 @@ import dev.temnikov.domain.enumeration.OrderStatus;
 @Table(name = "jhi_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Order implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -63,6 +59,10 @@ public class Order implements Serializable {
     @OneToOne
     @JoinColumn(unique = true)
     private Garbage garbage;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "orders", allowSetters = true)
+    private Address address;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "orders", allowSetters = true)
@@ -259,9 +259,18 @@ public class Order implements Serializable {
         return this;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     public void setCourier(Courier courier) {
         this.courier = courier;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -287,6 +296,7 @@ public class Order implements Serializable {
             "id=" + getId() +
             ", orderDate='" + getOrderDate() + "'" +
             ", price=" + getPrice() +
+            ", address=" + getAddress() +
             ", finishDate='" + getFinishDate() + "'" +
             ", userPhotoUrl='" + getUserPhotoUrl() + "'" +
             ", courierPhotoUrl='" + getCourierPhotoUrl() + "'" +

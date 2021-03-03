@@ -1,16 +1,14 @@
 package dev.temnikov.service.impl;
 
-import dev.temnikov.service.AppUserService;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.repository.AppUserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import dev.temnikov.service.AppUserService;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link AppUser}.
@@ -18,7 +16,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class AppUserServiceImpl implements AppUserService {
-
     private final Logger log = LoggerFactory.getLogger(AppUserServiceImpl.class);
 
     private final AppUserRepository appUserRepository;
@@ -40,7 +37,6 @@ public class AppUserServiceImpl implements AppUserService {
         return appUserRepository.findAll();
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public Optional<AppUser> findOne(Long id) {
@@ -52,5 +48,15 @@ public class AppUserServiceImpl implements AppUserService {
     public void delete(Long id) {
         log.debug("Request to delete AppUser : {}", id);
         appUserRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<AppUser> findByTelegramChatId(Long chatId) {
+        return appUserRepository.findByTelegramChatId(chatId);
+    }
+
+    @Override
+    public Optional<AppUser> findByUserPhone(String phoneNumber) {
+        return appUserRepository.findByPhoneNumber(phoneNumber);
     }
 }

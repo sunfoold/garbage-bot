@@ -1,13 +1,11 @@
 package dev.temnikov.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A AppUser.
@@ -16,7 +14,6 @@ import java.util.Set;
 @Table(name = "app_user")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AppUser implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -42,7 +39,8 @@ public class AppUser implements Serializable {
     @Column(name = "promo_code")
     private String promoCode;
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "app_user_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Address> addresses = new HashSet<>();
 
@@ -157,6 +155,7 @@ public class AppUser implements Serializable {
     public void setAddresses(Set<Address> addresses) {
         this.addresses = addresses;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

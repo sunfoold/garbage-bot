@@ -1,7 +1,6 @@
 package dev.temnikov.service;
 
 import dev.temnikov.domain.Garbage;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
  * Service Interface for managing {@link Garbage}.
  */
 public interface GarbageService {
-
     /**
      * Save a garbage.
      *
@@ -24,7 +22,6 @@ public interface GarbageService {
      * @return the list of entities.
      */
     List<Garbage> findAll();
-
 
     /**
      * Get the "id" garbage.
