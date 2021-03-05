@@ -1,5 +1,6 @@
 package dev.temnikov.service;
 
+import dev.temnikov.domain.Address;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.domain.Courier;
 import dev.temnikov.domain.Order;
@@ -35,4 +36,8 @@ public interface ApplicationFacadeService {
     Order startOrderByCourier(long orderId, Courier courier, String fileUrl, File file);
 
     Order completeOrderByCourier(long orderId, Courier courier, String fileUrl, File file);
+
+    boolean checkUserAndDeleteAddress(AppUser appUser, Address addressId);
+
+    boolean checkUserAddress(AppUser appUser, long addressId);
 }

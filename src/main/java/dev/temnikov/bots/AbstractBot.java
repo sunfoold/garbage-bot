@@ -31,19 +31,26 @@ public abstract class AbstractBot implements BotInterface {
         String expectedCommand = getExpectedCommands().getExpectedCommand(botCommandDTO.getMessage().chat().id());
         if (text != null) {
             String[] s = botCommandDTO.getText().split("_");
-            command = getCommand(s[0]);
+            String translated = translateText(s[0]);
+            command = getCommand(translated);
         }
         if (command == null) {
             if (expectedCommand != null) {
                 String[] s = expectedCommand.split("_");
+                String newCommand =s[0];
                 command = getCommand(s[0]);
-                botCommandDTO.setText(expectedCommand);
+                if (s.length<2){
+                    newCommand = newCommand +"_" + text;
+                }
+                botCommandDTO.setText(newCommand);
             } else {
                 command = getCommand(getDefaultCommand());
             }
         }
         return command;
     }
+
+    protected abstract String translateText(String s);
 
     protected void runListening() {
         while (true) {

@@ -1,14 +1,14 @@
 package dev.temnikov.bots.clientBot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import dev.temnikov.bots.AbstractBot;
 import dev.temnikov.bots.BotCommand;
 import dev.temnikov.bots.ExpectedCommands;
 import dev.temnikov.bots.MessageSender;
-import dev.temnikov.bots.clientBot.commands.ClientBotCommandsPrefixes;
-import dev.temnikov.bots.domain.BotCommandDTO;
+import dev.temnikov.bots.clientBot.constants.ClientBotButtons;
+import dev.temnikov.bots.clientBot.constants.ClientBotCommandsPrefixes;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +35,17 @@ public class ClientBot extends AbstractBot {
     @Autowired
     ClientBot(List<ClientBotCommand> botCommands) {
         commands = botCommands.stream().collect(Collectors.toMap(ClientBotCommand::getCommand, Function.identity()));
+    }
+
+    private static HashMap<String, String> translateCommand;
+
+    static {
+        translateCommand = new HashMap<>();
+        translateCommand.put(ClientBotButtons.NEW_ORDER, ClientBotCommandsPrefixes.SELECT_ADDRESS);
+        translateCommand.put(ClientBotButtons.ADDRESS_SETTINGS, ClientBotCommandsPrefixes.ADDRESS_SETTINGS);
+        translateCommand.put(ClientBotButtons.MY_BALANCE, ClientBotCommandsPrefixes.BALANCE);
+        translateCommand.put(ClientBotButtons.MY_ORDERS, ClientBotCommandsPrefixes.ORDERS);
+        translateCommand.put(ClientBotButtons.SETTINGS, ClientBotCommandsPrefixes.SETTINGS);
     }
 
     @PostConstruct
@@ -70,5 +81,10 @@ public class ClientBot extends AbstractBot {
     @Override
     public void sendMessage(AbstractSendRequest sendMessage) {
         sender.addMessageToClientBot(sendMessage);
+    }
+
+    @Override
+    protected String translateText(String s) {
+        return translateCommand.getOrDefault(s,s);
     }
 }

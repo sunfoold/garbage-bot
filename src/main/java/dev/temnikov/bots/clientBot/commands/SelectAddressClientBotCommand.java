@@ -1,15 +1,14 @@
 package dev.temnikov.bots.clientBot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
+import dev.temnikov.bots.clientBot.constants.ClientBotCommandsPrefixes;
 import dev.temnikov.bots.domain.BotCommandDTO;
 import dev.temnikov.domain.Address;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.service.AppUserService;
-import java.util.Optional;
+
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,10 +22,9 @@ public class SelectAddressClientBotCommand extends AbstractClientBotCommand {
     private static final String CHOOSE_ADDRESS = "Выберите адрес, с которого нужно выбросить мусор";
 
     @Override
-    public AbstractSendRequest process(Update update, BotCommandDTO botCommandDTO) {
+    protected AbstractSendRequest mainCommandLogic(Update update, AppUser user, BotCommandDTO botCommandDTO) {
         Long chatId = botCommandDTO.getChatId();
-        AppUser appUser = appUserService.findByTelegramChatId(chatId).get();
-        Set<Address> addresses = appUser.getAddresses();
+        Set<Address> addresses = user.getAddresses();
         if (addresses == null || addresses.isEmpty()) {
             clientBotExpectedCommands.addExpectedCommand(chatId, ClientBotCommandsPrefixes.ADD_ADDRESS);
             return new SendMessage(chatId, NO_ADDRESSES);

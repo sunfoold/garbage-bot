@@ -4,11 +4,12 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import dev.temnikov.bots.clientBot.ClientBotKeyboardsFactory;
+import dev.temnikov.bots.clientBot.constants.ClientBotCommandsPrefixes;
 import dev.temnikov.bots.domain.BotCommandDTO;
 import dev.temnikov.domain.Address;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.service.AddressService;
-import dev.temnikov.service.AppUserService;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -17,8 +18,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AddAddressClientBotCommand extends AbstractClientBotCommand {
-    @Autowired
-    AppUserService appUserService;
+
 
     @Autowired
     AddressService addressService;
@@ -27,8 +27,8 @@ public class AddAddressClientBotCommand extends AbstractClientBotCommand {
     ClientBotKeyboardsFactory clientBotKeyboardsFactory;
 
     @Override
-    public AbstractSendRequest process(Update update, BotCommandDTO botCommandDTO) {
-        Long chatId = botCommandDTO.getChatId();
+    protected AbstractSendRequest mainCommandLogic(Update update, AppUser user, BotCommandDTO botCommandDTO) {
+        Long chatId = user.getTelegramChatId();
         Optional<AppUser> byTelegramChatId = appUserService.findByTelegramChatId(chatId);
         AppUser appUser = byTelegramChatId.get();
         Address address = new Address();
@@ -46,8 +46,10 @@ public class AddAddressClientBotCommand extends AbstractClientBotCommand {
             .findFirst()
             .get();
         clientBotExpectedCommands.deleteExpectedCommand(chatId);
-        return new SendMessage(chatId, "Адрес установлен").replyMarkup(clientBotKeyboardsFactory.getCreateOrderKeyboard(address1));
+        return new SendMessage(chatId, "Адрес установлен")
+            .replyMarkup(clientBotKeyboardsFactory.getCreateOrderKeyboard(address1));
     }
+
 
     @Override
     public String getCommand() {

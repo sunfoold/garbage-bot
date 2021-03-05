@@ -3,12 +3,13 @@ package dev.temnikov.bots.clientBot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
-import dev.temnikov.bots.cache.CacheService;
+import dev.temnikov.bots.clientBot.constants.ClientBotCommandsPrefixes;
 import dev.temnikov.bots.domain.BotCommandDTO;
+import dev.temnikov.domain.AppUser;
 import dev.temnikov.domain.Order;
-import dev.temnikov.service.OrderService;
+
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +19,7 @@ public class UploadPhotoClientBotCommand extends AbstractClientBotCommand {
     private static final String ORDER_CREATED = "Заказ принят! Ожидайте назначения курьера";
 
     @Override
-    public AbstractSendRequest process(Update update, BotCommandDTO botCommandDTO) {
+    protected AbstractSendRequest mainCommandLogic(Update update, AppUser user, BotCommandDTO botCommandDTO) {
         Long chatId = botCommandDTO.getChatId();
         String fileUrl = botCommandDTO.getFileUrl();
         if (fileUrl == null) {

@@ -17,15 +17,13 @@ import javax.mail.search.FlagTerm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class NewGmailMessageReader {
-    @Autowired
+
     private PaymentService paymentService;
 
-    @Autowired
     private AppUserService userService;
 
-    @Autowired
     private MessageSender messageSender;
 
     public void main() throws Exception {
@@ -56,24 +54,26 @@ public class NewGmailMessageReader {
                 String content = (String) message.getContent();
                 String[] split = content.split("<font color=\"#000000\" face=\"Arial\" size=\"3\">");
                 Payment payment = createPayment(split);
-                payment = paymentService.save(payment);
+                //payment = paymentService.save(payment);
                 AppUser user = payment.getUser();
                 if (user != null) {
                     if (PaymentStatus.FAIL.equals(payment.getStatus())) {
-                        messageSender.addMessageToClientBot(
-                            new SendMessage(
-                                user.getTelegramChatId(),
-                                "Мы получили вашу оплату, но не смогли ее обработать, свяжитесь с поддержкой"
-                            )
-                        );
+                        System.out.println("123");
+//                        messageSender.addMessageToClientBot(
+//                            new SendMessage(
+//                                user.getTelegramChatId(),
+//                                "Мы получили вашу оплату, но не смогли ее обработать, свяжитесь с поддержкой"
+//                            )
+//                        );
                     } else {
                         Long balance = user.getBalance();
                         balance += payment.getValue();
                         user.setBalance(balance);
-                        user = userService.save(user);
-                        messageSender.addMessageToClientBot(
-                            new SendMessage(user.getTelegramChatId(), "Оплата зачислена. Ваш баланс = " + user.getBalance())
-                        );
+                        System.out.println("456");
+//                        user = userService.save(user);
+//                        messageSender.addMessageToClientBot(
+//                            new SendMessage(user.getTelegramChatId(), "Оплата зачислена. Ваш баланс = " + user.getBalance())
+//                        );
                     }
                 }
                 System.out.println(content);
@@ -89,13 +89,18 @@ public class NewGmailMessageReader {
         int sum = getPaymentValue(split[3]);
         String paymentInfo = getPaymentInfo(split[2]);
         payment.setPaymentDate(Instant.now());
-        Optional<AppUser> byUserPhone = userService.findByUserPhone(number);
+        //Optional<AppUser> byUserPhone = userService.findByUserPhone(number);
+        AppUser user = new AppUser();
+        user.setBalance(0L);
+        user.setPhoneNumber("+79663735555");
+        user.setTelegramChatId(124432L);
+        Optional<AppUser> byUserPhone = Optional.of(user);
         if (byUserPhone.isEmpty()) {
             payment.setStatus(PaymentStatus.FAIL);
         } else {
-            payment.setStatus(PaymentStatus.FAIL);
-            if (sum != -1) {
-                payment.setUser(byUserPhone.get());
+            payment.setUser(byUserPhone.get());
+            if (sum == -1) {
+                payment.setStatus(PaymentStatus.FAIL);
             } else {
                 payment.setStatus(PaymentStatus.SUCCESS);
                 payment.setValue(sum);
@@ -114,8 +119,8 @@ public class NewGmailMessageReader {
     }
 
     private int parseValueBeforeCurrency(String valueInfo) {
-        String[] valueCurrency = valueInfo.split(" ");
-        if (valueCurrency.length < 2 || !valueCurrency[1].equals(" RUB")) {
+        String[] valueCurrency = valueInfo.split(" ");
+        if (valueCurrency.length < 2 || !valueCurrency[1].equals("RUB")) {
             return -1;
         }
         try {
@@ -132,5 +137,10 @@ public class NewGmailMessageReader {
     private String getStringBeforeFont(String value) {
         String[] split = value.split("<");
         return split[0];
+    }
+
+    public static void main(String[] args) throws Exception {
+        NewGmailMessageReader reader = new NewGmailMessageReader();
+        reader.main();
     }
 }

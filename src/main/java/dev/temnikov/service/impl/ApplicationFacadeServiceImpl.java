@@ -10,10 +10,13 @@ import dev.temnikov.domain.Courier;
 import dev.temnikov.domain.Order;
 import dev.temnikov.domain.enumeration.OrderStatus;
 import dev.temnikov.service.*;
+
 import java.io.File;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -160,5 +163,31 @@ public class ApplicationFacadeServiceImpl implements ApplicationFacadeService {
             new SendMessage(order.getUser().getTelegramChatId(), "Курьер завершил выполнение вашего заказа")
         );
         return order;
+    }
+
+    @Override
+    public boolean checkUserAndDeleteAddress(AppUser appUser, Address address) {
+        Set<Address> userAddresses = appUser.getAddresses();
+        if (!userAddresses.contains(address)){
+            return false;
+        }
+        userAddresses.remove(address);
+        appUser.setAddresses(userAddresses);
+        appUserService.save(appUser);
+        return true;
+    }
+
+    @Override
+    public boolean checkUserAddress(AppUser appUser, long addressId) {
+        Optional<Address> one = addressService.findOne(addressId);
+        if (one.isEmpty()) {
+            return false;
+        }
+        Address address = one.get();
+        Set<Address> userAddresses = appUser.getAddresses();
+        if (!userAddresses.contains(address)){
+            return false;
+        }
+        return true;
     }
 }
