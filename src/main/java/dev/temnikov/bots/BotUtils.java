@@ -38,6 +38,15 @@ public class BotUtils {
         }
     }
 
+    public String parseAddress(BotCommandDTO commandDTO) {
+        String text = commandDTO.getText();
+        String[] command = parseCommand(text);
+        if (command.length > 1) {
+            return command[1];
+        }
+        return "";
+    }
+
     public SendMessage getNoAccessMessage(Long chatId, Keyboard keyboard) {
         SendMessage res = new SendMessage(chatId, NO_ACCESS);
         if (keyboard != null) {

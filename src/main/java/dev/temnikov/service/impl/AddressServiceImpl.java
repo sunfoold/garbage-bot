@@ -48,5 +48,6 @@ public class AddressServiceImpl implements AddressService {
     public void delete(Long id) {
         log.debug("Request to delete Address : {}", id);
         addressRepository.deleteById(id);
+        System.out.println("!!!!");
     }
 }

@@ -72,4 +72,9 @@ public class CourierBot extends AbstractBot {
     public void sendMessage(AbstractSendRequest sendMessage) {
         sender.addMessageToCourierBot(sendMessage);
     }
+
+    @Override
+    protected String translateText(String s) {
+        return s;
+    }
 }

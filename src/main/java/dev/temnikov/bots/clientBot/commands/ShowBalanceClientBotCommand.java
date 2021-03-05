@@ -10,19 +10,22 @@ import dev.temnikov.domain.AppUser;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AddressSettingsClientBotCommand extends AbstractClientBotCommand {
-    private static final String ADDRESSES =
-        "Нажмите на первую кнопку для добавления нового адреса " + "или же выберете адрес, который хотите удалить";
+public class ShowBalanceClientBotCommand extends AbstractClientBotCommand {
+    private static final String BALANCE = "Ваш баланс = %d рублей";
 
     @Override
     protected AbstractSendRequest mainCommandLogic(Update update, AppUser appUser, BotCommandDTO botCommandDTO) {
         Long chatId = botCommandDTO.getChatId();
-        InlineKeyboardMarkup addressKeyBoard = clientBotKeyboardsFactory.getAddressSettingsKeyBoard(appUser.getAddresses());
-        return new SendMessage(chatId, ADDRESSES).replyMarkup(addressKeyBoard);
+        InlineKeyboardMarkup balanceKeyBoard = clientBotKeyboardsFactory.getBalanceKeyBoard();
+        return new SendMessage(chatId, generateText(appUser)).replyMarkup(balanceKeyBoard);
     }
 
     @Override
     public String getCommand() {
-        return ClientBotCommandsPrefixes.ADDRESS_SETTINGS;
+        return ClientBotCommandsPrefixes.BALANCE;
+    }
+
+    private String generateText(AppUser user) {
+        return String.format(BALANCE, user.getBalance());
     }
 }

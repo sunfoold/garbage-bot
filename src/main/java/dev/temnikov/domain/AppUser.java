@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 /**
  * A AppUser.
@@ -39,9 +41,10 @@ public class AppUser implements Serializable {
     @Column(name = "promo_code")
     private String promoCode;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "app_user_id")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<Address> addresses = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

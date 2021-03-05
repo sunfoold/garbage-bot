@@ -8,7 +8,6 @@ import dev.temnikov.bots.ExpectedCommands;
 import dev.temnikov.bots.MessageSender;
 import dev.temnikov.bots.clientBot.constants.ClientBotButtons;
 import dev.temnikov.bots.clientBot.constants.ClientBotCommandsPrefixes;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class ClientBot extends AbstractBot {
 
     @Override
     public String getDefaultCommand() {
-        return ClientBotCommandsPrefixes.START;
+        return ClientBotCommandsPrefixes.MAIN_MENU;
     }
 
     @Override
@@ -85,6 +84,6 @@ public class ClientBot extends AbstractBot {
 
     @Override
     protected String translateText(String s) {
-        return translateCommand.getOrDefault(s,s);
+        return translateCommand.getOrDefault(s, s);
     }
 }

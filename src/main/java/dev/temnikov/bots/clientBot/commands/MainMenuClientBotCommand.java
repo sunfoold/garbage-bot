@@ -1,7 +1,6 @@
 package dev.temnikov.bots.clientBot.commands;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import dev.temnikov.bots.clientBot.constants.ClientBotCommandsPrefixes;
@@ -10,19 +9,18 @@ import dev.temnikov.domain.AppUser;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AddressSettingsClientBotCommand extends AbstractClientBotCommand {
-    private static final String ADDRESSES =
-        "Нажмите на первую кнопку для добавления нового адреса " + "или же выберете адрес, который хотите удалить";
+public class MainMenuClientBotCommand extends AbstractClientBotCommand {
+    private static final String MAIN_TEXT =
+        "Мы работаем в тестовом режиме! \n\n" + "Пожалуйста все вопросы, предложения и пожелания направляйте в поддержку";
 
     @Override
     protected AbstractSendRequest mainCommandLogic(Update update, AppUser appUser, BotCommandDTO botCommandDTO) {
         Long chatId = botCommandDTO.getChatId();
-        InlineKeyboardMarkup addressKeyBoard = clientBotKeyboardsFactory.getAddressSettingsKeyBoard(appUser.getAddresses());
-        return new SendMessage(chatId, ADDRESSES).replyMarkup(addressKeyBoard);
+        return new SendMessage(chatId, MAIN_TEXT).replyMarkup(clientBotKeyboardsFactory.getMenu());
     }
 
     @Override
     public String getCommand() {
-        return ClientBotCommandsPrefixes.ADDRESS_SETTINGS;
+        return ClientBotCommandsPrefixes.MAIN_MENU;
     }
 }

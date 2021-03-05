@@ -9,17 +9,15 @@ import dev.temnikov.bots.domain.BotCommandDTO;
 import dev.temnikov.domain.Address;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.service.AddressService;
-
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AddAddressClientBotCommand extends AbstractClientBotCommand {
-
-
     @Autowired
     AddressService addressService;
 
@@ -29,27 +27,27 @@ public class AddAddressClientBotCommand extends AbstractClientBotCommand {
     @Override
     protected AbstractSendRequest mainCommandLogic(Update update, AppUser user, BotCommandDTO botCommandDTO) {
         Long chatId = user.getTelegramChatId();
-        Optional<AppUser> byTelegramChatId = appUserService.findByTelegramChatId(chatId);
-        AppUser appUser = byTelegramChatId.get();
         Address address = new Address();
-        address.setStreetBuilding(botCommandDTO.getText());
-        Set<Address> addresses = appUser.getAddresses();
+        final String addressStr = getAddressToSet(botCommandDTO);
+        address.setStreetBuilding(addressStr);
+        Set<Address> addresses = user.getAddresses();
         if (addresses == null) {
             addresses = new HashSet<>();
         }
         addresses.add(address);
-        AppUser save = appUserService.save(appUser);
-        Address address1 = save
-            .getAddresses()
-            .stream()
-            .filter(ad -> botCommandDTO.getText().equals(ad.getStreetBuilding()))
-            .findFirst()
-            .get();
+        AppUser save = appUserService.save(user);
+        Address address1 = save.getAddresses().stream().filter(ad -> addressStr.equals(ad.getStreetBuilding())).findFirst().get();
         clientBotExpectedCommands.deleteExpectedCommand(chatId);
-        return new SendMessage(chatId, "Адрес установлен")
-            .replyMarkup(clientBotKeyboardsFactory.getCreateOrderKeyboard(address1));
+        return new SendMessage(chatId, "Адрес установлен").replyMarkup(clientBotKeyboardsFactory.getAddressSetKeyboard(address1));
     }
 
+    private String getAddressToSet(BotCommandDTO botCommandDTO) {
+        String s = botUtils.parseAddress(botCommandDTO);
+        if (StringUtils.isBlank(s)) {
+            s = botCommandDTO.getText();
+        }
+        return s;
+    }
 
     @Override
     public String getCommand() {

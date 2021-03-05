@@ -12,11 +12,10 @@ import dev.temnikov.bots.domain.BotCommandDTO;
 import dev.temnikov.domain.AppUser;
 import dev.temnikov.service.AppUserService;
 import dev.temnikov.service.ApplicationFacadeService;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public abstract class AbstractClientBotCommand implements ClientBotCommand {
@@ -35,31 +34,41 @@ public abstract class AbstractClientBotCommand implements ClientBotCommand {
     @Autowired
     AppUserService appUserService;
 
-
     private static final String NEED_PHONE_NUMBER = "Для работы с ботом введите свой номер телефона в формате +7ХХХХХХХХХХ";
     private static final String SELECT_ADDRESS = "У вас не сохраннено ни одного адреса. Добавьте ваш адрес в ответном сообщении";
 
-    public AbstractSendRequest process(Update update, BotCommandDTO botCommandDTO){
+    public AbstractSendRequest process(Update update, BotCommandDTO botCommandDTO) {
         long chatId = botCommandDTO.getChatId();
         Optional<AppUser> byTelegramChatId = appUserService.findByTelegramChatId(chatId);
-        if (byTelegramChatId.isEmpty()){
+        if (byTelegramChatId.isEmpty()) {
             byTelegramChatId = Optional.of(facadeService.createNewUser(chatId));
         }
         AppUser user = byTelegramChatId.get();
-        if (!hasUserPhoneNumber(user) && !isCommandToRegisterAddress(botCommandDTO)){
+        if (!hasUserPhoneNumber(user) && !isCommandToRegisterPhoneNumber(botCommandDTO)) {
             return sendRegistrationMessage(chatId);
-        } 
-        if (user.getAddresses()== null || user.getAddresses().isEmpty()){
+        }
+        if (
+            (user.getAddresses() == null || user.getAddresses().isEmpty()) &&
+            !isCommandToRegisterPhoneNumber(botCommandDTO) &&
+            !isCommandToRegisterAddress(botCommandDTO)
+        ) {
             clientBotExpectedCommands.addExpectedCommand(chatId, ClientBotCommandsPrefixes.ADD_ADDRESS);
             return new SendMessage(chatId, SELECT_ADDRESS);
         }
         return mainCommandLogic(update, user, botCommandDTO);
-        
     }
 
     private boolean isCommandToRegisterAddress(BotCommandDTO botCommandDTO) {
         String text = botCommandDTO.getText();
-        if (StringUtils.isEmpty(text)){
+        if (StringUtils.isEmpty(text)) {
+            return false;
+        }
+        return text.contains(ClientBotCommandsPrefixes.ADD_ADDRESS);
+    }
+
+    private boolean isCommandToRegisterPhoneNumber(BotCommandDTO botCommandDTO) {
+        String text = botCommandDTO.getText();
+        if (StringUtils.isEmpty(text)) {
             return false;
         }
         return text.contains(ClientBotCommandsPrefixes.REGISTRATION);
@@ -67,11 +76,11 @@ public abstract class AbstractClientBotCommand implements ClientBotCommand {
 
     protected abstract AbstractSendRequest mainCommandLogic(Update update, AppUser appUser, BotCommandDTO botCommandDTO);
 
-    public boolean hasUserPhoneNumber(AppUser appUser){
-        return (appUser!=null) && (appUser.getPhoneNumber()!=null) && !(" ".equals(appUser.getPhoneNumber()));
+    public boolean hasUserPhoneNumber(AppUser appUser) {
+        return (appUser != null) && (appUser.getPhoneNumber() != null) && !(" ".equals(appUser.getPhoneNumber()));
     }
 
-    public SendMessage sendRegistrationMessage (long chatId){
+    public SendMessage sendRegistrationMessage(long chatId) {
         clientBotExpectedCommands.addExpectedCommand(chatId, ClientBotCommandsPrefixes.REGISTRATION);
         return new SendMessage(chatId, NEED_PHONE_NUMBER);
     }

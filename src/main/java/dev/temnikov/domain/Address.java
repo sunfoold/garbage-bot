@@ -38,7 +38,7 @@ public class Address implements Serializable {
     @Column(name = "longitude")
     private String longitude;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties(value = "addresses", allowSetters = true)
     private AppUser appUser;
 

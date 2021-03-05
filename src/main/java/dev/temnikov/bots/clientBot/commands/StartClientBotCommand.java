@@ -9,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClientBotStartCommand extends AbstractClientBotCommand {
-
+public class StartClientBotCommand extends AbstractClientBotCommand {
     @Autowired
     SelectAddressClientBotCommand selectAddressClientBotCommand;
-
-
 
     @Override
     protected AbstractSendRequest mainCommandLogic(Update update, AppUser user, BotCommandDTO botCommandDTO) {
@@ -27,6 +24,4 @@ public class ClientBotStartCommand extends AbstractClientBotCommand {
     public String getCommand() {
         return ClientBotCommandsPrefixes.START;
     }
-
-
 }

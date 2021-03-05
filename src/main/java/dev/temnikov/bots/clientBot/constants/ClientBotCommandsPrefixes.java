@@ -14,4 +14,6 @@ public class ClientBotCommandsPrefixes {
     public static final String SETTINGS = "settings";
     public static final String DELETE_ADDRESS = "deleteAddress";
     public static final String CONFIRM_DELETE_ADDRESS = "confirmDeleteAddress";
+    public static final String INCREASE_BALANCE = "increaseBalance";
+    public static final String MAIN_MENU = "mainMenu";
 }
